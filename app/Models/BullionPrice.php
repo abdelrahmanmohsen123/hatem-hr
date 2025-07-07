@@ -10,4 +10,8 @@ class BullionPrice extends Model
     /** @use HasFactory<\Database\Factories\BullionPriceFactory> */
     use HasFactory;
      protected $guarded = [];
+       public function bullion()
+    {
+        return $this->belongsTo(Bullion::class,'bullion_id');
+    }
 }

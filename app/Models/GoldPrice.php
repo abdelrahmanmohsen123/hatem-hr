@@ -10,4 +10,9 @@ class GoldPrice extends Model
     /** @use HasFactory<\Database\Factories\GoldPriceFactory> */
     use HasFactory;
     protected $guarded = [];
+
+       public function gold()
+    {
+        return $this->belongsTo(Gold::class,'gold_id');
+    }
 }

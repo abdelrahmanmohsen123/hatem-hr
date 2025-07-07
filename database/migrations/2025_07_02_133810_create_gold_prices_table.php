@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('currency_id')->references('id')->on('currencies')->onDelete('cascade');
             $table->foreignId('gold_id')->references('id')->on('golds');
-            $table->foreignId('country_id')->references('id')->on('countries');
+            $table->foreignId('country_id')->nullable()->references('id')->on('countries');
             $table->string('base_price')->nullable();
+            $table->string('change_amount')->nullable();
             $table->string('dollar_price')->nullable();
             $table->enum('status_price', ['up', 'down', 'same'])->default('same');
             $table->string('latest_updated')->nullable();

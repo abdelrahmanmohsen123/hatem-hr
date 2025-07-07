@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('base_currency_id')->references('id')->on('currencies');
             $table->foreignId('target_currency_id')->references('id')->on('currencies');
-            $table->foreignId('country_id')->references('id')->on('countries');
+            $table->foreignId('country_id')->nullable()->references('id')->on('countries');
             $table->decimal('base_rate', 16, 6); // 1 SAR = X target_currency
             $table->decimal('target_rate', 16, 6); // 1 target_currency = X base_currency
             $table->enum('status_price', ['up', 'down', 'same'])->default('same');

@@ -39,6 +39,7 @@ class UpdateCurrencyRates implements ShouldQueue
      */
     public function handle()
     {
+     
         $apiKey = config('services.currencyapi.key');
         $url = "https://api.currencyapi.com/v3/latest";
 
@@ -49,6 +50,7 @@ class UpdateCurrencyRates implements ShouldQueue
             'apikey' => $apiKey,
             'base_currency' => $base_currency // Add your desired currencies here
         ]);
+        dd($response);
         // Handle error if needed
         if ($response->failed()) {
 
@@ -56,6 +58,7 @@ class UpdateCurrencyRates implements ShouldQueue
         }
         // Decode JSON response
         $rates = $response->json('data'); // Just the "data" part
+        // dd($rates);
         $meta = $response->json('meta');
         $latest_update = Carbon::parse($meta['last_updated_at']);
 
@@ -64,13 +67,13 @@ class UpdateCurrencyRates implements ShouldQueue
             // dd($code,$info);
             if (!$info['value'] || $info['value'] == 0) continue;
             $USD =  $rates['USD']['value'];
-            // if ($code === 'XAU') {
+            if ($code === 'XAU') {
 
-            //     $onsa = 1 / $info['value'];
-            //     $this->updateGoldPrices($base_currency, $onsa, $USD);
-            //     $this->updateBarPrices($base_currency, $onsa, $USD);
-            //     continue; // ننتقل للعنصر التالي لأن سعر الذهب لا علاقة له بالعملة
-            // }
+                // $onsa = 1 / $info['value'];
+                // $this->updateGoldPrices($base_currency, $onsa, $USD);
+                // $this->updateBarPrices($base_currency, $onsa, $USD);
+                continue; // ننتقل للعنصر التالي لأن سعر الذهب لا علاقة له بالعملة
+            }
 
 
 

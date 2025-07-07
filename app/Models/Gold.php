@@ -10,4 +10,7 @@ class Gold extends Model
     /** @use HasFactory<\Database\Factories\GoldFactory> */
     use HasFactory;
     protected $guarded = [];
+    protected $table = 'golds';
+
+   
 }
