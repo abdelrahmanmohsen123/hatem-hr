@@ -37,7 +37,7 @@ class BullionSeeder extends Seeder
        
             # code...
             foreach ($bars as $bar) {
-                DB::table('Bullions')->insert([
+                DB::table('bullions')->insert([
                     'name_ar' => $bar['ar'],
                     'name_en' => $bar['en'],
                     'icon' => null,
