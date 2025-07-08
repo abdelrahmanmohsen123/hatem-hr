@@ -14,10 +14,13 @@ class GoldController extends Controller
 {
     use ApiResponder;
     //
-     public function index(){
+    public function index()
+    {
         $currency_id = 3;
-        $gold_prices = GoldPrice::where('currency_id',$currency_id)->get();
+        $gold_prices = GoldPrice::where('currency_id', $currency_id)
+            ->where('status', true)
+            ->orderBy('id', 'asc') // or replace 'id' with your desired column
+            ->get();
         return $this->respondResource(GoldIndexResource::collection($gold_prices));
-
     }
 }
