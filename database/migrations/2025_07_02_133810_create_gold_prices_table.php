@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('dollar_price')->nullable();
             $table->enum('status_price', ['up', 'down', 'same'])->default('same');
             $table->string('latest_updated')->nullable();
+             $table->bigInteger('ordering')->default(1)->nullable();
+            $table->boolean('status')->default(true);
             $table->timestamps();
         });
     }

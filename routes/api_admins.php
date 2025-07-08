@@ -2,17 +2,22 @@
 
 
 
-use App\Http\Controllers\Admin\Report\ReportController;
-use App\Http\Controllers\Api\Admin\Service\ServiceController;
-use App\Http\Controllers\Api\Admin\Setting\SettingController;
-use App\Http\Controllers\Api\Admin\User\UserController;
-use App\Http\Controllers\Api\Admin\Authentication\AuthController;
-use App\Http\Controllers\Api\Admin\Banner\BannerController;
-use App\Http\Controllers\Api\Admin\Notification\NotificationController;
-use App\Http\Controllers\Api\Admin\Ticket\TicketController;
-use App\Http\Controllers\Api\Admin\Visit\VisitController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\Report\ReportController;
+use App\Http\Controllers\Api\Admin\Gold\GoldController;
+use App\Http\Controllers\Api\Admin\User\UserController;
+use App\Http\Controllers\Api\Admin\Visit\VisitController;
+use App\Http\Controllers\Api\Admin\Banner\BannerController;
+use App\Http\Controllers\Api\Admin\Ticket\TicketController;
+use App\Http\Controllers\Api\Admin\Bullion\BullionController;
+use App\Http\Controllers\Api\Admin\Service\ServiceController;
+use App\Http\Controllers\Api\Admin\Setting\SettingController;
+use App\Http\Controllers\Api\Admin\Currency\CurrencyController;
+use App\Http\Controllers\Api\Admin\Authentication\AuthController;
+use App\Http\Controllers\Api\Admin\Notification\NotificationController;
+
+
 
 Route::group(['prefix' => 'v1/admins', 'middleware' => ['localization']], function () {
 
@@ -26,53 +31,26 @@ Route::group(['prefix' => 'v1/admins', 'middleware' => ['localization']], functi
     // Protected Admin Routes
     Route::middleware(['auth:admin'])->group(function () {
 
-        // Users
-        Route::prefix('users')->group(function () {
-            Route::get('trashed', [UserController::class, 'trashed']);
-            Route::get('/', [UserController::class, 'index']);
-            Route::post('/', [UserController::class, 'store']);
-            Route::get('/{user}', [UserController::class, 'show']);
-            Route::put('/{user}', [UserController::class, 'update']);
-            Route::delete('/{user}', [UserController::class, 'destroy']);
+        
+
+        // currencies
+        Route::prefix('currencies')->group(function () {
+            Route::get('/', [CurrencyController::class, 'index']);
+            Route::get('/{currency_price}', [CurrencyController::class, 'show']);
+            Route::post('/{currency_price}', [CurrencyController::class, 'update']);
+        });
+        // golds
+        Route::prefix('golds')->group(function () {
+            Route::get('/', [GoldController::class, 'index']);
+            Route::get('/{gold_price}', [GoldController::class, 'show']);
+            Route::post('/{gold_price}', [GoldController::class, 'update']);
         });
 
-        // Visits
-        Route::prefix('visits')->group(function () {
-            Route::get('/', [VisitController::class, 'index']);
-            Route::post('/', [VisitController::class, 'store']);
-            Route::get('/{visit}', [VisitController::class, 'show']);
-            Route::put('/{visit}', [VisitController::class, 'update']);
-            Route::delete('/{visit}', [VisitController::class, 'destroy']);
-        });
-
-        // Services
-        Route::prefix('services')->group(function () {
-            Route::get('/', [ServiceController::class, 'index']);
-            Route::post('/', [ServiceController::class, 'store']);
-            Route::get('/{service}', [ServiceController::class, 'show']);
-            Route::put('/{service}', [ServiceController::class, 'update']);
-            Route::delete('/{service}', [ServiceController::class, 'destroy']);
-            Route::get('trashed', [ServiceController::class, 'trashed']);
-            Route::post('restore/{service}', [ServiceController::class, 'restore']);
-        });
-
-        // Reports
-        Route::prefix('reports')->group(function () {
-            Route::get('/{visit}/attributes', [ReportController::class, 'get_report_attributes']);
-            Route::post('/{visit}', [ReportController::class, 'store_report']);
-            Route::get('/{visit}/generate-report', [ReportController::class, 'generateReport']);
-            Route::put('/{visit}', [ReportController::class, 'update_report']);
-            Route::get('/{visit}', [ReportController::class, 'get_report']);
-            Route::delete('{visit}', [ReportController::class, 'delete_report']);
-        });
-
-        // Banners
-        Route::prefix('banners')->group(function () {
-            Route::get('/', [BannerController::class, 'index']);
-            Route::post('/', [BannerController::class, 'store']);
-            Route::get('/{banner}', [BannerController::class, 'show']);
-            Route::put('/{banner}', [BannerController::class, 'update']);
-            Route::delete('/{banner}', [BannerController::class, 'destroy']);
+        // bullions
+        Route::prefix('bullions')->group(function () {
+            Route::get('/', [BullionController::class, 'index']);
+            Route::get('/{bullion_price}', [BullionController::class, 'show']);
+            Route::post('/{bullion_price}', [BullionController::class, 'update']);
         });
 
         // Settings

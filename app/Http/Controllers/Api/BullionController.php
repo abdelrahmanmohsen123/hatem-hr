@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\Bullions\BullionIndexResource;
 use App\Models\BullionPrice;
 use App\Traits\ApiResponder;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\Bullion\BullionIndexResource;
 
 class BullionController extends Controller
 {

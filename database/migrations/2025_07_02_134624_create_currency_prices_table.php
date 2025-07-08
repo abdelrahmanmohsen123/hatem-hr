@@ -20,6 +20,8 @@ return new class extends Migration
             $table->decimal('target_rate', 16, 6); // 1 target_currency = X base_currency
             $table->enum('status_price', ['up', 'down', 'same'])->default('same');
             $table->string('latest_updated')->nullable();
+            $table->bigInteger('ordering')->default(1)->nullable();
+            $table->boolean('status')->default(true);
             $table->timestamps();
         });
     }

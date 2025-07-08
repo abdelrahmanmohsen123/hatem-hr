@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('code')->nullable();
             $table->string('icon')->nullable();
             $table->foreignId('country_id')->nullable()->references('id')->on('countries');
-
+            
             $table->timestamps();
         });
     }
