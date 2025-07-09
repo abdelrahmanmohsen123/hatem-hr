@@ -56,7 +56,7 @@ Route::group(['prefix' => 'v1/admins', 'middleware' => ['localization']], functi
         // Settings
         Route::prefix('settings')->group(function () {
             Route::get('/', [SettingController::class, 'index']);
-            Route::put('/', [SettingController::class, 'update']);
+            Route::post('/', [SettingController::class, 'update']);
         });
 
         // Tickets

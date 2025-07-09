@@ -50,165 +50,150 @@ if (!function_exists('lang')) {
     }
 }
 
+function getAccessToken($serviceAccountPath)
+{
+    $client = new Client();
+    $client->setAuthConfig($serviceAccountPath);
+    $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
+    $client->useApplicationDefaultCredentials();
+    $token = $client->fetchAccessTokenWithAssertion();
+    return $token['access_token'];
+}
 
-if (!function_exists('notifyViaFirebase')) {
-    function notifyViaFirebase($data, $to = null, $isTopic = false, $type = 'notification')
-    {
 
-        $to = collect($to)->filter();
+function notifyViaFirebase($topic = null, $title = null, $body = null, $image = null, $dataa = [], $tokens = [])
+{
+    // $SERVER_API_KEY = settings('firebase_api_access_key');
+    
+    $serviceAccountPath = storage_path('app/private/firebase-auth.json');
+    $projectId = 'el-mohtaref-2be8e';
+    $url = 'https://fcm.googleapis.com/v1/projects/' . $projectId . '/messages:send';
+    // Get access token using service account
+    $accessToken = getAccessToken($serviceAccountPath);
 
-        if ($type === 'notification') {
-            $data = array_merge([
-                'title' => $data['title'] ?? '',
-                'body' => $data['body'] ?? '',
-                'type' => $data['type'] ?? '',
-                'subject_id' => '',
-                'order_id' => $data['order_id'] ?? '',
-                'image' => $data['image'] ?? '',
-            ]);
-            // dd($data);
-        }
-        $tokenCurls = [];
-        // Prepare FCM message payload
-        if ($isTopic && !is_array($to)) {
-            $fields = [
-                'message' => [
-                    'topic' => 'general',
-                    'notification' => [
+    // Prepare notification data
+    $data = [
+        'title' => $title ?? '',
+        'body' => $body ?? '',
+
+        'image' => $image ?? '',  // Optional image
+        // 'news_id' => isset($dataa['news_id']) ? (string) $dataa['news_id']: null,
+        'type' => isset($dataa['type']) ? (string) $dataa['type'] : null, // Default type
+        'notification_id' => isset($dataa['notification_id']) ? (string) $dataa['notification_id'] : '',
+        'news' => $dataa['news'] ?? null,
+        // 'click_action' => 'FLUTTER_NOTIFICATION_CLICK', // For Android,
+        // 'sound' => 'alarm',
+    ];
+
+    // Prepare the payload
+    $messagePayload = [
+        'notification' => [
+            'title' => $data['title'],
+            'body' => $data['body'],
+            'image' => $data['image'],
+
+        ],
+        'data' => [
+            'vibrate' => '1',
+            'badge' => '1',
+            // 'sound' => 'notification',
+            'image' => $data['image'],
+
+            // 'match_id' => $data['match_id'], // Pass match_id here
+            // 'news_id' => isset($data['news_id']) ? $data['news_id'] : null,
+            'type' => isset($data['type']) ? $data['type'] : null, // Default type
+            'notification_id' => isset($data['notification_id']) ? (string) $data['notification_id'] : '',
+            'news' => isset($data['news']) ? (string) $data['news'] : '' ?? null,
+            // 'click_action' => 'FLUTTER_NOTIFICATION_CLICK', // For Android
+        ],
+        'android' => [
+            'ttl' => '660s',  // Set TTL here
+            // The TTL (time-to-live) value is added in the android section as 'ttl' => $ttl, which defaults to "3600s" (1 hour) but can be overridden by passing a different value.
+            // Set TTL to "0s" if you want messages to not be stored and to be discarded if the device is offline.
+            'priority' => 'high',
+            'notification' => [
+                'channel_id' => 'notify',
+                // 'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+                'image' => $data['image'], // Image URL for Android
+                'sound' => 'notification',   // Add this line. Use the base name of the sound file in res/raw.
+            ],
+        ],
+        'apns' => [
+
+            'payload' => [
+
+                'aps' => [
+                    'alert' => [
                         'title' => $data['title'],
                         'body' => $data['body'],
+                    ],
+                    'content-available' => 1,
+                    'sound' => 'notification.wav',
+                    'badge' => 1,
+                    // 'category' => 'FLUTTER_NOTIFICATION_CLICK',
 
-                    ],
-                    'data' => [
-                        'type' => $data['type'],
-                        'subject_id' => $data['subject_id'],
-                        'order_id' => $data['order_id'],
-                        'vibrate' => '1',
-                        'badge' => '1',
-                        'sound' => 'alarm.mp3',
-                    ],
-                    'android' => [
-                        'notification' => [
-                            'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
-                            'image' => $data['image']
-
-                        ]
-                    ],
                 ],
-            ];
-        } else {
-            foreach ($to as $token) {
-                $tokenCurls[] = [
-                    'message' => [
-                        'token' => $token,
-                        'notification' => [
-                            'title' => $data['title'],
-                            'body' => $data['body'],
+            ],
+            'headers' => [
+                'apns-priority' => '10',
+            ],
+        ],
+    ];
 
-                        ],
-                        'data' => [
-                            'type' => $data['type'],
-                            'subject_id' => $data['subject_id'],
-                            'order_id' => $data['order_id'],
-                            'vibrate' => '1',
-                            'badge' => '1',
-                        ],
-                        'android' => [
-                            'notification' => [
-                                'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
-                                'channel_id' => 'high_importance_channel',
-                                "sound" => "notification",
-                                "image" => $data['image']
+    // If tokens are provided, send to tokens
+    $responses = [];
+    if (!empty($tokens)) {
+        foreach ($tokens as $token) {
+            $messagePayload['token'] = $token;
+            $fields = ['message' => $messagePayload];
+            // dd ($fields);
 
-                            ]
-                        ],
-                        'apns' => [
-                            'payload' => [
-                                'aps' => [
-                                    'alert' => [
-                                        'title' => $data['title'],
-                                        'body' => $data['body'],
-                                    ],
-                                    'sound' => 'notification.caf',
-                                    'content-available' => 1,
-                                    'badge' => 1,
-                                    'category' => 'FLUTTER_NOTIFICATION_CLICK',
-                                ],
-                            ],
-                            'headers' => [
-                                'apns-priority' => '10',
-                            ],
-                        ],
-                    ],
-                ];
-            }
+            $responses[] = sendFirebaseNotification($fields, $accessToken, $url);
         }
-        sendNotifications($tokenCurls);
+        return $responses;
+    } else {
+        // Otherwise, send to the topic (fallback to 'general' topic if not provided)
+        $messagePayload['topic'] = $topic ?? 'general';
     }
+
+    // Prepare the fields for the notification
+    $fields = [
+        'message' => $messagePayload,
+    ];
+
+    // Send notification
+    return sendFirebaseNotification($fields, $accessToken, $url);
 }
 
+// Function to send the notification
+function sendFirebaseNotification($fields, $accessToken, $url)
+{
+    $headers = [
+        'Authorization: Bearer ' . $accessToken,
+        'Content-Type: application/json',
+    ];
 
-if (!function_exists('sendNotifications')) {
-    function sendNotifications($notifications)
-    {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields, JSON_UNESCAPED_UNICODE));
 
-        $serviceAccountPath = storage_path('app/private/firebase-auth.json');
-        $projectId = 'el-mohtaref-2be8e';
-        $url = 'https://fcm.googleapis.com/v1/projects/' . $projectId . '/messages:send';
-        $accessToken = getAccessToken($serviceAccountPath);
-
-        $headers = [
-            'Authorization: Bearer ' . $accessToken,
-            'Content-Type: application/json',
-        ];
+    $result = curl_exec($ch);
+    // dd($result);
 
 
-        $multiCurl = array();
-        $mh = curl_multi_init();
-        curl_multi_setopt($mh, CURLMOPT_PIPELINING, CURLPIPE_MULTIPLEX);
-
-        foreach ($notifications as $i => $notification) {
-            $multiCurl[$i] = curl_init();
-            curl_setopt($multiCurl[$i], CURLOPT_URL, $url);
-            curl_setopt($multiCurl[$i], CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($multiCurl[$i], CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($multiCurl[$i], CURLOPT_POST, true);
-            curl_setopt($multiCurl[$i], CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($multiCurl[$i], CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($multiCurl[$i], CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
-            curl_setopt($multiCurl[$i], CURLOPT_POSTFIELDS, json_encode($notification, JSON_UNESCAPED_UNICODE));
-            curl_multi_add_handle($mh, $multiCurl[$i]);
-        }
-
-        $index = null;
-        do {
-            curl_multi_exec($mh, $index);
-            curl_multi_select($mh);
-        } while ($index > 0);
-
-        foreach ($multiCurl as $k => $ch) {
-            $result[$k] = curl_multi_getcontent($ch);
-            if (curl_errno($ch)) {
-                \Log::error('Firebase API error: ' . curl_error($ch));
-            }
-            curl_multi_remove_handle($mh, $ch);
-        }
-        curl_multi_close($mh);
-        // \Log::info($result);
-
-        // dd($result);
-        // print_r($result);
+    if (curl_errno($ch)) {
+        // Handle error
+        $error_msg = curl_error($ch);
+        curl_close($ch);
+        throw new \Exception('Firebase Notification failed: ' . $error_msg);
     }
-}
 
-if (!function_exists('getAccessToken')) {
-    function getAccessToken($serviceAccountPath)
-    {
-        $client = new Client();
-        $client->setAuthConfig($serviceAccountPath);
-        $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
-        $client->useApplicationDefaultCredentials();
-        $token = $client->fetchAccessTokenWithAssertion();
-        return $token['access_token'];
-    }
+    curl_close($ch);
+    return $result;
 }

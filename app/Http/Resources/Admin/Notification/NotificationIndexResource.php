@@ -20,7 +20,7 @@ class NotificationIndexResource extends JsonResource
             'body' => $this->body,
             // 'type' => $this->type,
             // 'type' => class_basename($this->notifiable_type),
-            'name' => $this->notifiable?->name, // Returns the related model's name
+            'type' => $this->type, // Returns the related model's name
             // 'notifiable' => [
             //     'id' => $this->notifiable_id,
 

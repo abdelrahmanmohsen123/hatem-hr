@@ -10,8 +10,11 @@ use App\Support\FileUploader;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\Admin\Settings\SettingIndexResource;
 use App\Http\Requests\Admin\Setting\UpdateSettingRequest;
+use App\Traits\ApiResponder;
+
 class SettingController extends Controller
 {
+    use ApiResponder;
     public function index()
     {
         $setting = Setting::first();

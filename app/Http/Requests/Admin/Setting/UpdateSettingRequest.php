@@ -25,7 +25,7 @@ class UpdateSettingRequest extends FormRequest
             //
             'image_path' => 'nullable',
             'android_version' => 'nullable|string',
-            'ios_version' => 'nullable|string,'
+            'ios_version' => 'nullable|string',
             'android_version_collector' => 'nullable|string',
             'ios_version_collector' => 'nullable|string',
             'force_update_android_version' => 'nullable|boolean',

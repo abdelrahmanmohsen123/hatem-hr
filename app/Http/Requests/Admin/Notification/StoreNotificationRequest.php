@@ -23,14 +23,10 @@ class StoreNotificationRequest extends FormRequest
     {
         return [
             //
-            'title_ar' => 'required|string|max:255',
-            'title_en' => 'required|string|max:255',
-            'body_ar' => 'nullable|string',
-            'body_en' => 'nullable|string',
-
-            'target_audience' => 'required|in:all_users,specific_user',
-            'specific_user' => 'nullable|exists:users,id',
-
+            'title' => 'required|string|max:255',
+            'body' => 'nullable|string',
+            'image' => ['image', 'mimes:jpeg,png,jpg,gif', 'max:5048'],
+            'type'=>'nullable|string|in:gold,currency,bullion,general',
         ];
     }
 }

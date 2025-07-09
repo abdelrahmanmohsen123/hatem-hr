@@ -26,8 +26,6 @@ class SettingsIndexResource extends JsonResource
 
             
             'app_active' => $this->app_active,
-            'wallet_number' => $this->wallet_number,
-            'instapay_number' => $this->instapay_number,
             'whatsapp' => $this->whatsapp,
             'instagram' => $this->instagram,
             'facebook' => $this->facebook,
