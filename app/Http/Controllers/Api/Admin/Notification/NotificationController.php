@@ -31,6 +31,7 @@ class NotificationController extends Controller
     {
 
         $data = $request->validated();
+        // dd($data);
         if ($request->image) {
             $data['image'] = (new FileUploader())->save($request->image, 'notificatios');
         }
@@ -41,7 +42,7 @@ class NotificationController extends Controller
                 'title' => $data['title'],
                 'body' => $data['body'],
                 'type' => $data['type'],
-                'image' => $data['image'],
+                'image' => $data['image'] ?? '',
             ]
         );
         // notifyViaFirebase($notifiaction->type, $notifiaction->title, $notifiaction->body, uploadsPath($notifiaction->image), $dataa = [], $tokens = []);

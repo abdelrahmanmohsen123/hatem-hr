@@ -18,7 +18,7 @@ class NotificationIndexResource extends JsonResource
             'id' => $this->id,
             'title'=>$this->title,
             'body' => $this->body,
-            // 'type' => $this->type,
+            'image' => uploadsPath($this->image),
             // 'type' => class_basename($this->notifiable_type),
             'type' => $this->type, // Returns the related model's name
             // 'notifiable' => [
