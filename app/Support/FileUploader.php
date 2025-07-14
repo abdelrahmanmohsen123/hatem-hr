@@ -73,7 +73,7 @@ class FileUploader
 
         Storage::disk('public')->put($fullPath, $file->__toString());
 
-        return 'storage/' . $fullPath;
+        return $fullPath;
     }
 
 
