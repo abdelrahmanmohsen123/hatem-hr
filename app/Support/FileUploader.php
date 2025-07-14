@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Support;
+
 use Dompdf\Dompdf;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Intervention\Image\Facades\Image;
@@ -42,40 +43,39 @@ class FileUploader
     {
         ini_set('memory_limit', '512M');
 
-        //  if the file is a ready URL, save it as it is.
         if (filter_var($file, FILTER_VALIDATE_URL)) {
             return $file;
         }
 
-        //  file type , mp3.
+        $uniqueName = md5(uniqid());
+
         if ($file->getClientOriginalExtension() == 'mp3') {
-            return $file->storeAs($path, md5(uniqid()) . '.mp3');
+            return $file->storeAs($path, $uniqueName . '.mp3', 'public');
         }
 
-        //  file type , pdf.
         if ($file->getClientOriginalExtension() == 'pdf') {
-            return $file->storeAs($path, md5(uniqid()) . '.pdf');
+            return $file->storeAs($path, $uniqueName . '.pdf', 'public');
         }
+
+        // For images
         if ($this->resizeWidth) {
             $file = Image::make($file)
                 ->resize($this->resizeWidth, $this->resizeHeight, function ($constraint) {
                     $constraint->aspectRatio();
                 })->encode('png');
-            $file->encode($this->format, $this->quality);
-
         } else {
             $file = Image::make($file)->encode('png');
-            $file->encode($this->format, $this->quality);
-
         }
 
+        $file->encode($this->format, $this->quality);
         $resizedImageName = md5($file->__toString() . uniqid()) . '.png';
-        $path = $path . '/' . $resizedImageName;
+        $fullPath = $path . '/' . $resizedImageName;
 
-        Storage::put($path, $file->__toString());
+        Storage::disk('public')->put($fullPath, $file->__toString());
 
-        return $path;
+        return 'storage/' . $fullPath;
     }
+
 
     public function saveBase64Image($base64_image, $path, $ext = 'jpg')
     {
