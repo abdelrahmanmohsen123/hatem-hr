@@ -39,7 +39,7 @@ return [
     'phone_not_exist' => 'phone not exist ✔',
     'You Can not edit profile during in progress order' => 'You Can not edit profile during in progress order 😢🤦‍♂️',
 
-
+    'account_created'=> 'Account Created Success',
     'account_deleted' => 'Your account has been deleted. Please contact support.',
     'account_not_found' => 'Account not found. Please register first.',
     'account_already_exists' => 'An account with this phone number already exists.',

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\Report\ReportController;
 use App\Http\Controllers\Api\Admin\Gold\GoldController;
 use App\Http\Controllers\Api\Admin\User\UserController;
 use App\Http\Controllers\Api\Admin\Visit\VisitController;
+use App\Http\Controllers\Api\Admin\Admins\AdminController;
 use App\Http\Controllers\Api\Admin\Banner\BannerController;
 use App\Http\Controllers\Api\Admin\Ticket\TicketController;
 use App\Http\Controllers\Api\Admin\Bullion\BullionController;
@@ -24,6 +25,10 @@ Route::group(['prefix' => 'v1/admins', 'middleware' => ['localization']], functi
     // Auth Routes
     Route::prefix('auth')->group(function () {
         Route::post('/login', [AuthController::class, 'login']);
+       
+
+        Route::get('/me', [AuthController::class, 'my_profile'])->middleware('auth:admin');
+        Route::post('/update', [AuthController::class, 'update'])->middleware('auth:admin');
         Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:admin');
         Route::post('/refresh', [AuthController::class, 'refreshToken'])->middleware('auth:admin');
     });
@@ -31,7 +36,15 @@ Route::group(['prefix' => 'v1/admins', 'middleware' => ['localization']], functi
     // Protected Admin Routes
     Route::middleware(['auth:admin'])->group(function () {
 
-        
+
+        // admins
+        Route::prefix('admin')->group(function () {
+            Route::get('/', [AdminController::class, 'index']);
+            Route::post('/store', [AdminController::class, 'store']);
+            Route::get('/{admin}', [AdminController::class, 'show']);
+            Route::post('/{admin}', [AdminController::class, 'update']);
+            Route::post('/{admin}/delete', [AdminController::class, 'delete']);
+        });
 
         // currencies
         Route::prefix('currencies')->group(function () {
