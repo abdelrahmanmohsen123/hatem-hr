@@ -23,7 +23,7 @@ class CurrencyIndexResource extends JsonResource
             'target_rate' => $this->target_rate,
             'status_price' => $this->status_price,
             'status' => (bool) $this->status,
-             'ordering' =>  $this->ordering,
+            'ordering' =>  $this->ordering,
             'latest_updated' => Carbon::parse($this->latest_updated)->format('Y-m-d H:i:s'),
         ];
     }

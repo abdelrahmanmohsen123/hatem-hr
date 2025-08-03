@@ -27,7 +27,9 @@ class CurrencyController extends Controller
     public function index(Request $request)
     {
         $base_currency_id = 3;
-        $currencies = CurrencyPrice::where('base_currency_id', $base_currency_id)->get();
+        $currencies = CurrencyPrice::where('base_currency_id', $base_currency_id)
+            ->orderBy('ordering', 'asc')
+            ->get();
         return $this->respondResource(CurrencyIndexResource::collection($currencies));
     }
 
