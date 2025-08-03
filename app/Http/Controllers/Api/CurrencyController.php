@@ -19,7 +19,7 @@ class CurrencyController extends Controller
         $bas_currency_id = 3;
         $currencies = CurrencyPrice::where('base_currency_id', $bas_currency_id)
             ->where('status', true)
-            ->orderBy('id', 'asc') // or replace 'id' with your desired column
+            ->orderBy('ordering', 'asc') // or replace 'id' with your desired column
             ->get();
         return $this->respondResource(CurrencyIndexResource::collection($currencies));
     }
