@@ -24,6 +24,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['localization']], function () {
     Route::get('currencies', [CurrencyController::class, 'index']);
     Route::get('gold-prices', [GoldController::class, 'index']);
     Route::get('bullion-prices', [BullionController::class, 'index']);
+    
+    
 
 
 
