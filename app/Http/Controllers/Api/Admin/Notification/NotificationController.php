@@ -40,8 +40,9 @@ class NotificationController extends Controller
         $notifiaction = Notification::create(
             [
                 'title' => $data['title'],
-                'body' => $data['body'],
-                'type' => $data['type'],
+                'body' => $data['body'] ?? null,
+                'link' => $data['link'] ?? null,
+                'type' => $data['type'] ?? null,
                 'image' => $data['image'] ?? '',
             ]
         );

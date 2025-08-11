@@ -25,6 +25,7 @@ class StoreNotificationRequest extends FormRequest
             //
             'title' => 'required|string|max:255',
             'body' => 'nullable|string',
+            'link'=> 'nullable|url',
             'image' => ['nullable', 'mimes:jpeg,png,jpg,gif', 'max:5048'],
             'type'=>'nullable|string|in:gold,currency,bullion,general',
         ];

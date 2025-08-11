@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Carbon\Carbon;
 use App\Models\BullionPrice;
 use App\Traits\ApiResponder;
 use Illuminate\Http\Request;
@@ -19,7 +20,13 @@ class BullionController extends Controller
             ->where('status', true)
             ->orderBy('id', 'asc') // or replace 'id' with your desired column
             ->get();
-        return $this->respondResource(BullionIndexResource::collection($bullion_prices));
+
+
+        $latestUpdate = optional($bullion_prices->first())->updated_at;
+
+        return $this->respondResource(BullionIndexResource::collection($bullion_prices),[
+            'latestUpdate'=> Carbon::parse($latestUpdate)->format('Y-m-d H:i:s'),
+        ]);
     }
 
     //
