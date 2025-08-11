@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name_ar')->nullable();
             $table->string('name_en')->nullable();
+            $table->string('percentage_increase')->nullable();
             $table->string('icon')->nullable();
             $table->boolean('status')->default(true);
             $table->timestamps();

@@ -26,7 +26,7 @@ class UpdateBullionRequest extends FormRequest
             'status' => 'nullable|boolean',
             'icon' =>['nullable', 'image', 'max:5048'],
             'ordering' => 'nullable|integer',
-
+            'percentage_increase'=>'nullable|numeric'
         ];
     }
 }

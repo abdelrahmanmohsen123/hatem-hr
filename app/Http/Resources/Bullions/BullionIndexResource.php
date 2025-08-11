@@ -17,10 +17,19 @@ class BullionIndexResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' =>$this->bullion->{'name_'.$request->header('lang')},
-            'icon' =>uploadsPath($this->bullion->icon),
-            'base_price' => number_format($this->base_price,2),
-            'dollar_price' => number_format($this->dollar_price,2),
+            'name' => $this->bullion->{'name_' . $request->header('lang')},
+            'icon' => uploadsPath($this->bullion->icon),
+            // 'base_price' => number_format($this->base_price, 2),
+            // 'dollar_price' => number_format($this->dollar_price, 2),
+
+            'base_price' => number_format(
+                $this->base_price + ($this->base_price * $this->percentage_increase / 100),
+                2
+            ),
+            'dollar_price' => number_format(
+                $this->dollar_price + ($this->dollar_price * $this->percentage_increase / 100),
+                2
+            ),
             'latest_updated' => Carbon::parse($this->latest_updated)->format('Y-m-d H:i:s'),
         ];
     }
