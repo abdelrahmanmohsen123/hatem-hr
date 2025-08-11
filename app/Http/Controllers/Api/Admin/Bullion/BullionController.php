@@ -92,12 +92,13 @@ class BullionController extends Controller
 
         
         $bullion = BullionPrice::findOrFail($id);
-        $data = $request->except('icon');
+        $data = $request->except(['icon','percentage_increase']);
 
         if ($request->hasFile('icon')) {
             $image = (new FileUploader())->save($request->icon, 'bullions');
             $bullion->bullion->update([
-                'icon' => $image
+                'icon' => $image,
+                'percentage_increase'=>$request->percentage_increase ? $request->percentage_increase :  $bullion->bullion->percentage_increase,
             ]);
         }
         $bullion->update($data);
