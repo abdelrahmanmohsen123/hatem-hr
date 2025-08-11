@@ -102,7 +102,7 @@ class BullionController extends Controller
             ]);
         }
         $bullion->update($data);
-        $bullion->refresh();
+        $bullion->bullion->refresh();
         return $this->respondResource(new BullionIndexResource($bullion));
     }
 
