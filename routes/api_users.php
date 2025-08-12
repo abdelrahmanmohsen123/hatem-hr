@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\GoldController;
 use App\Http\Controllers\Api\BullionController;
+use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\CurrencyController;
 use App\Http\Controllers\Api\UserApp\AppController;
 use App\Http\Controllers\Api\UserApp\RateController;
@@ -24,6 +25,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['localization']], function () {
     Route::get('currencies', [CurrencyController::class, 'index']);
     Route::get('gold-prices', [GoldController::class, 'index']);
     Route::get('bullion-prices', [BullionController::class, 'index']);
+    Route::get('contacts', [ContactController::class,'getSocialContact']);
+
     
     
 
