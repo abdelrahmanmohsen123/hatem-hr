@@ -19,8 +19,9 @@ class GoldIndexResource extends JsonResource
             'id' => $this->id,
             'name' => $this->gold->{'name_' . $request->header('lang')},
             'icon' => uploadsPath($this->gold->icon),
-            'base_price' => $this->base_price,
-            'dollar_price' => $this->dollar_price,
+            
+            'base_price' => number_format($this->base_price,2),
+            'dollar_price' => number_format($this->dollar_price,2),
             'status_price' => $this->status_price,
             'status' => (bool) $this->status,
             'ordering' =>  $this->ordering,
