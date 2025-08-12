@@ -7,7 +7,7 @@ use App\Models\BullionPrice;
 use App\Traits\ApiResponder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\Bullion\BullionIndexResource;
+use App\Http\Resources\Bullions\BullionIndexResource;
 
 class BullionController extends Controller
 {
@@ -22,10 +22,11 @@ class BullionController extends Controller
             ->get();
 
 
-        $latestUpdate = optional($bullion_prices->first())->updated_at;
+        $latestUpdate = optional($bullion_prices->first())->latest_update;
+        // dd($bullion_prices->first());
 
         return $this->respondResource(BullionIndexResource::collection($bullion_prices),[
-            'latestUpdate'=> Carbon::parse($latestUpdate)->format('Y-m-d H:i:s'),
+            'latest_updated'=> Carbon::parse($latestUpdate)->format('Y-m-d H:i:s'),
         ]);
     }
 

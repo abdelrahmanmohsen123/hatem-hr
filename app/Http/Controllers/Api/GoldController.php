@@ -24,10 +24,10 @@ class GoldController extends Controller
             ->get();
 
 
-            $latestUpdate = optional($gold_prices->first())->updated_at;
+        $latestUpdate = optional($gold_prices->first())->latest_update;
 
         return $this->respondResource(GoldIndexResource::collection($gold_prices),[
-            'latestUpdate'=> Carbon::parse($latestUpdate)->format('Y-m-d H:i:s'),
+            'latest_updated'=> Carbon::parse($latestUpdate)->format('Y-m-d H:i:s'),
         ]);
     }
 }
