@@ -21,8 +21,8 @@ class CurrencyIndexResource extends JsonResource
             'icon_target_currency'=>uploadsPath($this->Target_currency->icon),
             'base_rate'=> number_format($this->base_rate,2),
             'target_rate'=> number_format($this->target_rate,2),
-            'base_rate_float'=> (float) round($this->base_rate,5),
-            'target_rate_float'=> (float) round($this->target_rate,5),
+            'base_rate_nonformate'=> (float) round($this->base_rate,5),
+            'target_rate_nonformate'=> (float) round($this->target_rate,5),
 
             'status_price'=>$this->status_price,
             'ordering'=>$this->ordering,

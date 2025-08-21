@@ -32,13 +32,13 @@ class BullionIndexResource extends JsonResource
                 (float)$this->dollar_price + ((float)$this->dollar_price * ((float)($this->bullion->percentage_increase ?? 0) / 100)),
                 2
             ),
-            'base_price_nonformate'=> (float)number_format(
+            'base_price_nonformate'=>  (float) round(
                 (float)$this->base_price + ((float)$this->base_price * ((float)($this->bullion->percentage_increase ?? 0) / 100)),
-                5
+                5,
             ),
-            'dollar_price_nonformate' => (float)number_format(
+            'dollar_price_nonformate' => (float) round(
                 (float)$this->dollar_price + ((float)$this->dollar_price * ((float)($this->bullion->percentage_increase ?? 0) / 100)),
-                5
+                5,
             ),
             'latest_updated' => (string) Carbon::parse($this->updated_at)->valueOf(),
         ];
