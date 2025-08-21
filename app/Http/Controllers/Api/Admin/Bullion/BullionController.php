@@ -5,24 +5,25 @@ namespace App\Http\Controllers\Api\Admin\Bullion;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Visit;
+use App\Models\Bullion;
 use App\Models\Currency;
 use App\Models\GoldPrice;
+use App\Models\BullionPrice;
 use App\Traits\ApiResponder;
 use Illuminate\Http\Request;
 use App\Models\CurrencyPrice;
 use App\Support\FileUploader;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\Bullion\UpdateBullionRequest;
+use App\Http\Requests\Admin\Gold\UpdateGoldRequest;
 use App\Http\Requests\Admin\Visit\StoreVisitRequest;
 use App\Http\Resources\Admin\Gold\GoldIndexResource;
 use App\Http\Requests\Admin\Visit\UpdateVisitRequest;
 use App\Http\Resources\Admin\Visit\VisitShowResource;
 use App\Http\Resources\Admin\Visit\VisitIndexResource;
-use App\Http\Requests\Admin\Currency\UpdateCurrencyRequest;
-use App\Http\Requests\Admin\Gold\UpdateGoldRequest;
+use App\Http\Requests\Admin\Bullion\UpdateBullionRequest;
 use App\Http\Resources\Admin\Bullion\BullionIndexResource;
+use App\Http\Requests\Admin\Currency\UpdateCurrencyRequest;
 use App\Http\Resources\Admin\Currency\CurrencyIndexResource;
-use App\Models\BullionPrice;
 
 class BullionController extends Controller
 {
@@ -92,17 +93,20 @@ class BullionController extends Controller
 
         // dd($request->all());
         $bullion = BullionPrice::findOrFail($id);
+
+        $main_bullion = Bullion::findOrFail($bullion->bullion_id);
+
         $data = $request->except(['icon','percentage_increase']);
 
         if ($request->hasFile('icon')) {
             $image = (new FileUploader())->save($request->icon, 'bullions');
         }
-        $bullion->bullion->update([
-                'icon' => $image ?? $bullion->bullion->icon,
-                'percentage_increase'=>$request->percentage_increase ? $request->percentage_increase :  $bullion->bullion->percentage_increase,
+        $main_bullion->update([
+                'icon' => $image ?? $main_bullion->icon,
+                'percentage_increase'=> $request->percentage_increase ? $request->percentage_increase :  $main_bullion->percentage_increase,
         ]);
         $bullion->update($data);
-        $bullion->bullion->refresh();
+
         return $this->respondResource(new BullionIndexResource($bullion));
     }
 
