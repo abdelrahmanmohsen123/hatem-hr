@@ -22,11 +22,11 @@ class BullionIndexResource extends JsonResource
             // 'base_price' => $this->base_price,
             // 'dollar_price' => $this->dollar_price,
             'base_price' => number_format(
-                (float)$this->base_price + ((float)$this->base_price * (float)$this->bullion->percentage_increase / 100),
+                $this->base_price,  // Ensure this is a float
                 2
             ),
             'dollar_price' => number_format(
-                (float)$this->dollar_price + ((float)$this->dollar_price * (float)$this->bullion->percentage_increase / 100),
+                $this->dollar_price,
                 2
             ),
             'status_price' => $this->status_price,
