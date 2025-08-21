@@ -22,6 +22,8 @@ class GoldIndexResource extends JsonResource
             'icon' =>uploadsPath($this->gold->icon),
             'base_price' => number_format($this->base_price,2),
             'dollar_price' => number_format($this->dollar_price,2),
+            'base_price_nonformate'=>$this->base_price,
+            'dollar_price_nonformate'=>$this->dollar_price,
             'status_price' => $this->status_price,
              'change_amount' => $this->change_amount ? number_format($this->change_amount,1) : '0',
             'latest_updated' => (string) Carbon::parse($this->latest_updated)->valueOf(),
