@@ -29,7 +29,7 @@ class CurrencyController extends Controller
         $latestUpdate = optional($currencies->first())->latest_update;
 
         return $this->respondResource(CurrencyIndexResource::collection($currencies), [
-            'latest_updated' => Carbon::parse($latestUpdate)->valueOf(),
+            'latest_updated' => (string) Carbon::parse($latestUpdate)->valueOf(),
         ]);
     }
 }

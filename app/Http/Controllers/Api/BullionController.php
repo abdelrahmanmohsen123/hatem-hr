@@ -26,7 +26,7 @@ class BullionController extends Controller
         // dd($bullion_prices->first());
 
         return $this->respondResource(BullionIndexResource::collection($bullion_prices),[
-            'latest_updated'=> Carbon::parse($latestUpdate)->valueOf(),
+            'latest_updated'=> (string) Carbon::parse($latestUpdate)->valueOf(),
         ]);
     }
 

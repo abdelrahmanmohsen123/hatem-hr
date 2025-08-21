@@ -23,7 +23,7 @@ class CurrencyIndexResource extends JsonResource
             'target_rate'=>number_format($this->target_rate,2),
             'status_price'=>$this->status_price,
             'ordering'=>$this->ordering,
-            'latest_updated'=>Carbon::parse($this->latest_updated)->valueOf(),
+            'latest_updated'=> (string) Carbon::parse($this->latest_updated)->valueOf(),
         ];
     }
 }
