@@ -23,17 +23,23 @@ class BullionIndexResource extends JsonResource
             // 'base_price' => number_format($this->base_price, 2),
             // 'dollar_price' => number_format($this->dollar_price, 2),
 
-            'base_price' => number_format(
+            'base_price' =>  (float)number_format(
                 (float)$this->base_price + ((float)$this->base_price * ((float)($this->bullion->percentage_increase ?? 0) / 100)),
                 2
             ),
 
-            'dollar_price' => number_format(
+            'dollar_price' =>  (float)number_format(
                 (float)$this->dollar_price + ((float)$this->dollar_price * ((float)($this->bullion->percentage_increase ?? 0) / 100)),
                 2
             ),
-            'base_price_nonformate' => (float)$this->base_price + ((float)$this->base_price * ((float)($this->bullion->percentage_increase ?? 0) / 100)),
-            'dollar_price_nonformate' => (float)$this->dollar_price + ((float)$this->dollar_price * ((float)($this->bullion->percentage_increase ?? 0) / 100)),
+            // 'base_price_float'=> (float)number_format(
+            //     (float)$this->base_price + ((float)$this->base_price * ((float)($this->bullion->percentage_increase ?? 0) / 100)),
+            //     2
+            // ),
+            // 'dollar_price_float' => (float)number_format(
+            //     (float)$this->dollar_price + ((float)$this->dollar_price * ((float)($this->bullion->percentage_increase ?? 0) / 100)),
+            //     2
+            // ),
             'latest_updated' => (string) Carbon::parse($this->updated_at)->valueOf(),
         ];
     }
