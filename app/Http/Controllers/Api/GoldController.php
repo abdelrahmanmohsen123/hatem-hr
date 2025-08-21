@@ -27,7 +27,7 @@ class GoldController extends Controller
         $latestUpdate = optional($gold_prices->first())->latest_update;
 
         return $this->respondResource(GoldIndexResource::collection($gold_prices),[
-            'latest_updated'=> Carbon::parse($latestUpdate)->format('Y-m-d H:i:s.v'),
+            'latest_updated'=> Carbon::parse($latestUpdate)->valueOf(),
         ]);
     }
 }
