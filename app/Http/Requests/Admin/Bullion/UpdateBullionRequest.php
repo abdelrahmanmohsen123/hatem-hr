@@ -22,11 +22,11 @@ class UpdateBullionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            
+
             'status' => 'nullable|boolean',
             'icon' =>['nullable', 'image', 'max:5048'],
-            'ordering' => 'nullable|integer',
-            'percentage_increase'=>'nullable|numeric'
+            'ordering' => 'nullable|integer|min:1',
+            'percentage_increase'=>'nullable|numeric|min:0'
         ];
     }
 }
