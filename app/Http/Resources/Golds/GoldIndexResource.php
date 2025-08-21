@@ -24,7 +24,7 @@ class GoldIndexResource extends JsonResource
             'dollar_price' => number_format($this->dollar_price,2),
             'status_price' => $this->status_price,
              'change_amount' => $this->change_amount ? number_format($this->change_amount,1) : '0',
-            'latest_updated' => Carbon::parse($this->latest_updated)->valueOf(),
+            'latest_updated' => (string) Carbon::parse($this->latest_updated)->valueOf(),
         ];
     }
 }
