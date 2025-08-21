@@ -15,7 +15,7 @@ class BullionIndexResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        
+
         return [
             'id' => $this->id,
             'name' => $this->bullion->{'name_' . $request->header('lang')},
@@ -31,7 +31,7 @@ class BullionIndexResource extends JsonResource
                 $this->dollar_price + ($this->dollar_price * $this->bullion->percentage_increase / 100),
                 2
             ),
-            'latest_updated' => Carbon::parse($this->latest_updated)->format('Y-m-d H:i:s'),
+            'latest_updated' => Carbon::parse($this->latest_updated)->format('Y-m-d H:i:s.v'),
         ];
     }
 }
