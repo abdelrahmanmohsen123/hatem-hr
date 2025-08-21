@@ -181,6 +181,7 @@ class UpdateCurrencyRate
         $currency = Currency::where('code', $base_currency)->first();
         $gram_24 = $onsa / 31.1035;
 
+
         $bar_weights = [
             'سبيكة 1 جرام'       => 1,
             'سبيكة 2.5 جرام'     => 2.5,
@@ -202,7 +203,6 @@ class UpdateCurrencyRate
             'الجنية عيار 24'     => ['weight' => 8, 'karat' => 1],
         ];
 
-        $bar_rates = [];
         foreach ($bar_weights as $name => $info) {
             if (is_array($info)) {
                 // Coin (has weight + karat)
@@ -221,21 +221,21 @@ class UpdateCurrencyRate
                 $bullion_price = BullionPrice::where('bullion_id', $bullion->id)->where('currency_id', $currency->id)->first();
 
                 if ($bullion_price) {
-                    $difference = round(abs($price - $bullion_price->base_price), 4);
+                    $bar_rates = [];
 
-                    if (round($price, 4) > $bullion_price->base_price) {
+
+
+                    if (round($price, 4) > $bullion_price->price) {
                         $status = 'up';
-                    } elseif (round($price, 4) < $bullion_price->base_price) {
+                    } elseif (round($price, 4) < $bullion_price->price) {
                         $status = 'down';
                     } else {
                         $status = $bullion_price->status_price ?? 'up';
                     }
 
                     $bullion_price->base_price = round($price, 4);
-                    $bullion_price->change_amount = $difference;
                     $bullion_price->status_price = $status;
                     $bullion_price->dollar_price = round($price * $USD, 4);
-                    $bullion_price->latest_updated = now();
 
                     $bullion_price->save();
                 } else {
@@ -245,8 +245,8 @@ class UpdateCurrencyRate
                         'base_price' => round($price, 4),
                         'dollar_price' => round($price * $USD, 4),
                         'status_price' => 'up',
-                        'change_amount' => 0,
                         'latest_updated' => now(),
+
                     ]);
                 }
             }
