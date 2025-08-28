@@ -26,8 +26,8 @@ class GoldIndexResource extends JsonResource
             'icon' =>uploadsPath($this->gold->icon),
             'base_price' => number_format($basePrice,2),
             'dollar_price' => number_format($dollarPrice,2),
-            'base_price_nonformate'=> (float) round($this->base_price,5),
-            'dollar_price_nonformate'=> (float) round($this->dollar_price,5),
+            'base_price_nonformate'=> (float) $this->base_price,
+            'dollar_price_nonformate'=> (float) $this->dollar_price,
 
 
             'status_price' => $this->status_price,
