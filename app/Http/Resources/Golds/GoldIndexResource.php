@@ -16,23 +16,17 @@ class GoldIndexResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        // Ensure numeric values are properly cast to float before formatting
-        $basePrice = is_numeric(str_replace(',', '', $this->base_price)) ? (float) str_replace(',', '', $this->base_price) : 0.0;
-        $dollarPrice = is_numeric(str_replace(',', '', $this->dollar_price)) ? (float) str_replace(',', '', $this->dollar_price) : 0.0;
-        $changeAmount = is_numeric(str_replace(',', '', $this->change_amount)) ? (float) str_replace(',', '', $this->change_amount) : 0.0;
-
         return [
             'id' => $this->id,
             'name' =>$this->gold->{'name_'.$request->header('lang')},
             'icon' =>uploadsPath($this->gold->icon),
-            'base_price' => number_format($basePrice,2),
-            'dollar_price' => number_format($dollarPrice,2),
+            'base_price' => number_format($this->base_price,2),
+            'dollar_price' => number_format($this->dollar_price,2),
             'base_price_nonformate'=> (float) $this->base_price,
             'dollar_price_nonformate'=> (float) $this->dollar_price,
 
-
             'status_price' => $this->status_price,
-             'change_amount' => $changeAmount ? number_format($changeAmount,1) : '0',
+             'change_amount' => $this->change_amount && $this->change_amount > 0 ? number_format($this->change_amount,1) : '0',
             'latest_updated' => (string) Carbon::parse($this->latest_updated)->valueOf(),
         ];
     }
