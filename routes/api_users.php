@@ -8,31 +8,44 @@ use App\Http\Controllers\Api\BullionController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\CurrencyController;
 use App\Http\Controllers\Api\UserApp\AppController;
-use App\Http\Controllers\Api\UserApp\RateController;
-use App\Http\Controllers\Api\UserApp\VisitController;
-use App\Http\Controllers\Api\UserApp\BannerController;
-use App\Http\Controllers\Api\UserApp\TicketController;
-use App\Http\Controllers\Api\UserApp\CarTypeController;
-use App\Http\Controllers\Api\UserApp\ServiceController;
+
+
+
+
+use App\Http\Controllers\UserAuthenticationController;
 use App\Http\Controllers\Api\CurrencyApi\CurrencyApiController;
-use App\Http\Controllers\Api\UserApp\UserNotificationController;
-use App\Http\Controllers\Api\UserApp\UserAuthenticationController;
+
+
+
 
 
 
 Route::group(['prefix' => 'v1', 'middleware' => ['localization']], function () {
+
+//   test
+
+
+    // Authentication API - Login with username and password
+    Route::post('login', [UserAuthenticationController::class, 'login']);
+    // Registration API - Register new user
+    Route::post('register', [UserAuthenticationController::class, 'register']);
+
+    // User data API - Get user details using token or user ID
+    Route::get('my-profile', [UserAuthenticationController::class, 'getUserData'])->middleware('auth:sanctum')->withoutMiddleware('auth:sanctum');
+
+
     Route::get('currency-api', [CurrencyApiController::class, 'getRates']);
     Route::get('currencies', [CurrencyController::class, 'index']);
     Route::get('gold-prices', [GoldController::class, 'index']);
     Route::get('bullion-prices', [BullionController::class, 'index']);
     Route::get('contacts', [ContactController::class,'getSocialContact']);
 
-    
-    
 
 
 
-    
+
+
+
 
 
     // Route::group(['prefix' => 'home'], function () {
