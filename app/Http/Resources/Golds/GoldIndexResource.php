@@ -17,9 +17,10 @@ class GoldIndexResource extends JsonResource
     public function toArray(Request $request): array
     {
         // Ensure numeric values are properly cast to float before formatting
-        $basePrice = is_numeric($this->base_price) ? (float) $this->base_price : 0.0;
-        $dollarPrice = is_numeric($this->dollar_price) ? (float) $this->dollar_price : 0.0;
-        $changeAmount = is_numeric($this->change_amount) ? (float) $this->change_amount : 0.0;
+        $basePrice = is_numeric(str_replace(',', '', $this->base_price)) ? (float) str_replace(',', '', $this->base_price) : 0.0;
+        $dollarPrice = is_numeric(str_replace(',', '', $this->dollar_price)) ? (float) str_replace(',', '', $this->dollar_price) : 0.0;
+        $changeAmount = is_numeric(str_replace(',', '', $this->change_amount)) ? (float) str_replace(',', '', $this->change_amount) : 0.0;
+
         return [
             'id' => $this->id,
             'name' =>$this->gold->{'name_'.$request->header('lang')},
