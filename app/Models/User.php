@@ -23,7 +23,8 @@ class User extends Authenticatable
         'experience',
         'national_id',
         'user_id',
-        'password'
+        'password',
+        'balance_vacations_days'
     ];
 
     /**
