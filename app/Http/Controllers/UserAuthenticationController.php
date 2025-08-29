@@ -41,6 +41,7 @@ class UserAuthenticationController extends Controller
             'password' => 'required|min:6',
 
 
+
         ]);
 
         $user = User::create([
@@ -50,6 +51,7 @@ class UserAuthenticationController extends Controller
             'national_id' => $request->national_id,
             'password' => Hash::make($request->password),
             'user_id' => rand(1000, 9999),
+            'balance_vacations_days' => rand(0, 30),
         ]);
 
         return $this->respondResource(new UserIndexResource($user), ['message' => 'User registered successfully']);

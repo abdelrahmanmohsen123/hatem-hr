@@ -20,7 +20,8 @@ class UserIndexResource extends JsonResource
             'age' => $this->age,
             'experience' => $this->experience,
             'national_id' => $this->national_id,
-            'description' => $this->description,
+            // 'description' => $this->description,
+            'balance_vacations_days' => $this->balance_vacations_days,
             'user_id' => $this->user_id,
         ];
     }
