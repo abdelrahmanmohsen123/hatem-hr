@@ -149,11 +149,14 @@ class UserAuthenticationController extends Controller
             return response()->json(['message' => 'User has no balance vacations days'], 400);
         }
 
-        if ($user_by_id->balance_vacations_days < $request->ends_at - $request->starts_at) {
+        $startDate = \Carbon\Carbon::parse($request->starts_at);
+        $endDate = \Carbon\Carbon::parse($request->ends_at);
+        $requestedDays = $startDate->diffInDays($endDate) + 1;
+        if ($user_by_id->balance_vacations_days < $requestedDays) {
             return response()->json(['message' => 'User has no balance vacations days'], 400);
         }
 
-        $user_by_id->balance_vacations_days = $user_by_id->balance_vacations_days - ($request->ends_at - $request->starts_at);
+        $user_by_id->balance_vacations_days = $user_by_id->balance_vacations_days - $requestedDays;
         $user_by_id->save();
 
         if (!$user) {
