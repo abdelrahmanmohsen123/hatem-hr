@@ -70,7 +70,7 @@ class UserAuthenticationController extends Controller
             }
 
 
-            $user = User::find($decrypteduser_id);
+            $user = User::where('user_id', $decrypteduser_id)->first();
 
             if (!$user) {
                 return response()->json(['message' => 'User not found'], 404);
