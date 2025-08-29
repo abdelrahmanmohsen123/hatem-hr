@@ -34,7 +34,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['localization']], function () {
     Route::get('my-profile', [UserAuthenticationController::class, 'getUserData']);
 
 
-    Route::get('request-vacations', [UserAuthenticationController::class, 'requestVacations'])->middleware('auth:sanctum');
+    Route::post('request-vacations', [UserAuthenticationController::class, 'requestVacations'])->middleware('auth:sanctum');
 
 
 
