@@ -30,7 +30,7 @@ class UserAuthenticationController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return $this->respondResource(new UserIndexResource($user), ['message' => 'User logged in successfully', 'token' => $token]);
+        return $this->respondResource(new UserIndexResource($user), ['message' => 'User logged in successfully', 'token' => $token, 'app_key' => env('APP_KEY')]);
     }
 
     public function register(Request $request)
@@ -41,8 +41,6 @@ class UserAuthenticationController extends Controller
             'experience' => 'nullable|string',
             'national_id' => 'nullable|string|unique:users',
             'password' => 'required|min:6',
-
-
 
         ]);
 
@@ -132,6 +130,62 @@ class UserAuthenticationController extends Controller
 
     public function requestVacations(Request $request)
     {
+        $request->validate([
+            'starts_at' => 'required|date|after:today',
+            'ends_at' => 'required|date|after:starts_at',
+            'reason' => 'required|string',
+            'user_id' => 'required|string',
+        ]);
+
+        $user_by_id = User::where('user_id', $request->user_id)->first();
+        $user = auth('sanctum')->user();
+
+        if (!$user_by_id) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        if ($user_by_id->balance_vacations_days < 1) {
+            return response()->json(['message' => 'User has no balance vacations days'], 400);
+        }
+
+        $startDate = \Carbon\Carbon::parse($request->starts_at);
+        $endDate = \Carbon\Carbon::parse($request->ends_at);
+        $requestedDays = $startDate->diffInDays($endDate) + 1;
+        if ($user_by_id->balance_vacations_days < $requestedDays) {
+            return response()->json(['message' => 'User has no balance vacations days'], 400);
+        }
+
+        $user_by_id->balance_vacations_days = $user_by_id->balance_vacations_days - $requestedDays;
+        $user_by_id->save();
+
+        if (!$user) {
+            return response()->json(['message' => 'Authentication required'], 401);
+        }
+
+        $vacation = Vacation::create([
+            'starts_at' => $request->starts_at,
+            'ends_at' => $request->ends_at,
+            'reason' => $request->reason,
+            'user_id' => $user->user_id,
+        ]);
+
+        return $this->respondResource(new VacationResource($vacation), ['message' => 'Vacation request sent successfully', 'username' => $user->username]);
+
+    }
+
+    public function requestVacationsEncryption(Request $request)
+    {
+
+
+        // Decrypt the request data first
+        $decryptedData = [];
+        foreach ($request->all() as $key => $value) {
+            $decryptedData[$key] = decrypt($value);
+        }
+
+        $request->merge($decryptedData);
+
+
         $request->validate([
             'starts_at' => 'required|date|after:today',
             'ends_at' => 'required|date|after:starts_at',

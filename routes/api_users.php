@@ -36,6 +36,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['localization']], function () {
 
     Route::post('request-vacations', [UserAuthenticationController::class, 'requestVacations'])->middleware('auth:sanctum');
 
+    Route::post('request-vacations-encryption', [UserAuthenticationController::class, 'requestVacationsEncryption'])->middleware('auth:sanctum');
+
 
 
 
