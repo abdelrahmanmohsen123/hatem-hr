@@ -31,7 +31,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['localization']], function () {
     Route::post('register', [UserAuthenticationController::class, 'register']);
 
     // User data API - Get user details using token or user ID
-    Route::get('my-profile', [UserAuthenticationController::class, 'getUserData'])->middleware('auth:sanctum')->withoutMiddleware('auth:sanctum');
+    Route::get('my-profile', [UserAuthenticationController::class, 'getUserData']);
 
 
     Route::get('currency-api', [CurrencyApiController::class, 'getRates']);

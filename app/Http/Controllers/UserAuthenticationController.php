@@ -78,7 +78,7 @@ class UserAuthenticationController extends Controller
 
             return $this->respondResource(new UserIndexResource($user), ['message' => 'User data fetched successfully', 'user_id' => $decrypteduser_id, 'user_name' => $user->username]);
         } else {
-            $authenticatedUser = auth()->user();
+            $authenticatedUser = auth('sanctum')->user();
             // If no user_i provided, get user from token
             if (!$authenticatedUser) {
                 return response()->json(['message' => 'Authentication required'], 401);
