@@ -7,6 +7,7 @@ use App\Models\Vacation;
 use App\Traits\ApiResponder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Crypt;
 use App\Http\Resources\VacationResource;
 use App\Http\Resources\UserIndexResource;
 
@@ -180,7 +181,7 @@ class UserAuthenticationController extends Controller
         // Decrypt the request data first
         $decryptedData = [];
         foreach ($request->all() as $key => $value) {
-            $decryptedData[$key] = decrypt($value);
+            $decryptedData[$key] = Crypt::decrypt($value);
         }
 
         $request->merge($decryptedData);
