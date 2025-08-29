@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
 
 
+            $table->string('balance_vacations_days')->default(0);
             $table->string('username')->unique();
             $table->string('password');
             $table->string('age');
