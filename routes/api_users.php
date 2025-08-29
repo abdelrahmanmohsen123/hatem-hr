@@ -34,23 +34,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['localization']], function () {
     Route::get('my-profile', [UserAuthenticationController::class, 'getUserData']);
 
 
-    Route::get('currency-api', [CurrencyApiController::class, 'getRates']);
-    Route::get('currencies', [CurrencyController::class, 'index']);
-    Route::get('gold-prices', [GoldController::class, 'index']);
-    Route::get('bullion-prices', [BullionController::class, 'index']);
-    Route::get('contacts', [ContactController::class,'getSocialContact']);
 
 
 
 
-
-
-
-
-
-    // Route::group(['prefix' => 'home'], function () {
-    //     Route::get('/', [AppController::class, 'initData']);           //return all banners,categories,districts,guidelines,packages
-    //     Route::get('/social', [AppController::class, 'getSocial']);           //return all banners,categories,districts,guidelines,packages
-
-    // });
 });
