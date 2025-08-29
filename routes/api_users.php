@@ -34,6 +34,9 @@ Route::group(['prefix' => 'v1', 'middleware' => ['localization']], function () {
     Route::get('my-profile', [UserAuthenticationController::class, 'getUserData']);
 
 
+    Route::get('request-vacations', [UserAuthenticationController::class, 'requestVacations']);
+
+
 
 
 

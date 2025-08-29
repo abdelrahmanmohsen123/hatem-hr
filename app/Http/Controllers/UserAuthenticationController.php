@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserIndexResource;
+use App\Http\Resources\VacationResource;
 use App\Models\User;
 use App\Traits\ApiResponder;
 use Illuminate\Http\Request;
@@ -124,6 +125,49 @@ class UserAuthenticationController extends Controller
 
         throw new \Exception('Invalid encrypted user ID format');
 
+
+    }
+
+
+    public function requestVacations(Request $request)
+    {
+        $request->validate([
+            'starts_at' => 'required|date|after:today',
+            'ends_at' => 'required|date|after:starts_at',
+            'reason' => 'required|string',
+            'user_id' => 'required|string',
+        ]);
+
+        $user_by_id = User::where('user_id', $request->user_id)->first();
+        $user = auth('sanctum')->user();
+
+        if (!$user_by_id) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        if ($user_by_id->balance_vacations_days < 1) {
+            return response()->json(['message' => 'User has no balance vacations days'], 400);
+        }
+
+        if ($user_by_id->balance_vacations_days < $request->ends_at - $request->starts_at) {
+            return response()->json(['message' => 'User has no balance vacations days'], 400);
+        }
+
+        $user_by_id->balance_vacations_days = $user_by_id->balance_vacations_days - ($request->ends_at - $request->starts_at);
+        $user_by_id->save();
+
+        if (!$user) {
+            return response()->json(['message' => 'Authentication required'], 401);
+        }
+
+        $vacation = Vacation::create([
+            'starts_at' => $request->starts_at,
+            'ends_at' => $request->ends_at,
+            'reason' => $request->reason,
+            'user_id' => $user->user_id,
+        ]);
+
+        return $this->respondResource(new VacationResource($vacation), ['message' => 'Vacation request sent successfully', 'username' => $user->username]);
 
     }
 }
