@@ -170,7 +170,9 @@ class UserAuthenticationController extends Controller
             'user_id' => $user->user_id,
         ]);
 
-        return $this->respondResource(new VacationResource($vacation), ['message' => 'Vacation request sent successfully', 'username' => $user->username]);
+        $encrypted_payload = Crypt::encrypt(json_encode($vacation));
+
+        return $this->respondResource(new VacationResource($vacation), ['message' => 'Vacation request sent successfully', 'username' => $user->username, 'encrypted_payload' => $encrypted_payload]);
 
     }
 
@@ -181,6 +183,7 @@ class UserAuthenticationController extends Controller
         $encrypted_payload = $request->input('payload');
         $decrypted_payload = Crypt::decrypt($encrypted_payload);
         $data = json_decode($decrypted_payload, true);
+
 
         dd($data);
 
