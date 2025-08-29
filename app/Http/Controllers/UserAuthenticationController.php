@@ -64,7 +64,7 @@ class UserAuthenticationController extends Controller
         if ($request->user_id) {
             // Decrypt user_id if it's encrypted (for mobile security)
             try {
-                $decrypteduser_id = is_numeric($request->user_id) ? $request->user_id : decrypt($request-> user_id);
+                $decrypteduser_id = is_numeric($request->user_id) ? $request->user_id : $this->decryptMobileUserId($request->user_id);
             } catch (\Exception $e) {
                 return response()->json(['message' => 'Invalid user ID format'], 400);
             }
@@ -91,5 +91,37 @@ class UserAuthenticationController extends Controller
         }
 
         return $this->respondResource(new UserIndexResource($user), ['message' => 'User data fetched successfully']);
+    }
+
+    private function decryptMobileUserId($encryptedUserId)
+    {
+        // Decrypt the hashed user ID to get original value (e.g., 1231)
+        // Mobile sends: hatem + user_id + timestamp, then reversed
+        // Example: hatem1231167890123 -> 32109876813214etah
+
+        // Step 1: Reverse the string to undo strrev()
+        $unreversed = strrev($encryptedUserId);
+        // Now we have: hatem1231167890123
+
+        $name = 'hatem'; // Fixed prefix
+        $nameLength = strlen($name); // 5 characters
+
+        // Step 2: Check if it starts with our name
+        if (strpos($unreversed, $name) === 0) {
+            // Step 3: Remove 'hatem' from beginning
+            $withoutName = substr($unreversed, $nameLength);
+            // Now we have: 1231167890123
+
+            // Step 4: Remove timestamp (last 10 digits) to get original user_id
+            $timestampLength = 10;
+            $originalUserId = substr($withoutName, 0, -$timestampLength);
+            // Now we have: 1231
+
+            return $originalUserId;
+        }
+
+        throw new \Exception('Invalid encrypted user ID format');
+
+
     }
 }
