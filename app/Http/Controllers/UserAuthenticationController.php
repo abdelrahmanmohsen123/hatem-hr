@@ -178,13 +178,13 @@ class UserAuthenticationController extends Controller
     {
 
 
-        // Decrypt the request data first
-        $decryptedData = [];
-        foreach ($request->all() as $key => $value) {
-            $decryptedData[$key] = Crypt::decrypt($value);
-        }
+        $encrypted_payload = $request->input('payload');
+        $decrypted_payload = Crypt::decrypt($encrypted_payload);
+        $data = json_decode($decrypted_payload, true);
 
-        $request->merge($decryptedData);
+        dd($data);
+
+        $request->merge($data);
 
 
         $request->validate([
@@ -195,6 +195,8 @@ class UserAuthenticationController extends Controller
         ]);
 
         $user_by_id = User::where('user_id', $request->user_id)->first();
+
+
         $user = auth('sanctum')->user();
 
         if (!$user_by_id) {
