@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UserIndexResource;
-use App\Http\Resources\VacationResource;
 use App\Models\User;
+use App\Models\Vacation;
 use App\Traits\ApiResponder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Resources\VacationResource;
+use App\Http\Resources\UserIndexResource;
 
 class UserAuthenticationController extends Controller
 {
