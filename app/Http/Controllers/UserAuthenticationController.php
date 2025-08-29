@@ -185,7 +185,7 @@ class UserAuthenticationController extends Controller
         $data = json_decode($decrypted_payload, true);
 
 
-        dd($data);
+        // dd($data);
 
         $request->merge($data);
 
